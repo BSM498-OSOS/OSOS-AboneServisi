@@ -29,14 +29,20 @@ namespace Business.Concrete
 
         public IResult Delete(Customer customer)
         {
-            _customerDal.Delete(customer);
-            return new SuccessResult(); 
+            var result = _customerDal.Get(c => c.Id == customer.Id);
+            if(result != null)
+            {
+                _customerDal.Delete(result);
+                return new SuccessResult();
+            }
+            return new ErrorResult();
+            
         }
 
         public IDataResult<List<Customer>> GetAll()
         {
             var result = _customerDal.GetAll();
-            if(result!=null)
+            if(result.Count>0)
                 return new SuccessDataResult<List<Customer>>(result);
             return new ErrorDataResult<List<Customer>>();
         }
